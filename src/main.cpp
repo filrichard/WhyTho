@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <whytho/backend.h>
+#include <whytho/analyzer.h>
 
 int main ( int argc, char** argv )
 {
@@ -19,10 +20,13 @@ int main ( int argc, char** argv )
         return 1;
     }
 
+    std::vector< whytho::Finding > analysis = whytho::analyze( *info );
+
     std::cout << "PID: " << info->pid << "\n";
     std::cout << "PPID: " << info->ppid << "\n";
     std::cout << "UID: " << info->uid << "\n";
     std::cout << "Executable: " << info->exe_path << "\n";
+    std::cout << analysis[ 0 ].message << "\n";
 
     return 0;
 }
