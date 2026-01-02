@@ -31,6 +31,11 @@ namespace whytho
             out.push_back( { Severity::Info, "Child/helper process of: " + parent } );
         }
 
+        if ( p.exe_path.rfind( "/tmp/", 0 ) == 0 || p.exe_path.rfind( "/private/tmp", 0 ) == 0 )
+        {
+            out.push_back( { Severity::Low, "Executable loaded in a temporary directory (unusual for installed applications)" } );
+        }
+
         return out;
     }
 
