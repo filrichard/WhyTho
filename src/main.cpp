@@ -34,12 +34,13 @@ static bool parse_pid( const char* s, pid_t& out )
 static void print_help()
 {
     std::cout <<
-        "whytho — explain why a process is running\n\n"
+        "whytho — explains why a process is running\n\n"
         "Usage:\n"
         "  whytho <pid>\n\n"
         "Options:\n"
         "  --help       Show this help message\n"
         "  --version    Show version information\n"
+        "  --json       Renders output in JSON\n"
         "  self         Shows information about the \"WhyTho\" process\n";
 }
 
