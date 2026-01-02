@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cstdlib>
-#include <whytho/backend.h>
-#include <whytho/analyzer.h>
+#include "whytho/backend.h"
+#include "whytho/analyzer.h"
+#include "whytho/render.h"
 
 int main ( int argc, char** argv )
 {
@@ -22,15 +23,7 @@ int main ( int argc, char** argv )
 
     std::vector< whytho::Finding > analysis = whytho::analyze( *info );
 
-    std::cout << "PID: " << info->pid << "\n";
-    std::cout << "PPID: " << info->ppid << "\n";
-    std::cout << "UID: " << info->uid << "\n";
-    std::cout << "Executable: " << info->exe_path << "\n";
-    std::cout << "Ancestry:\n";
-    for ( auto ancestor : info->ancestry )
-    {
-        std::cout << "  [" << ancestor.pid << "] " << ancestor.exe << " \n";
-    }
+    whytho::render_human( *info, analysis );
 
     return 0;
 }
