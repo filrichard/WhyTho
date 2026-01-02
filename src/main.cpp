@@ -20,6 +20,8 @@ int main ( int argc, char** argv )
     }
 
     std::cout << "PID: " << info->pid << "\n";
+    std::cout << "PPID: " << info->ppid << "\n";
+    std::cout << "UID: " << info->uid << "\n";
     std::cout << "Executable: " << info->exe_path << "\n";
 
     return 0;

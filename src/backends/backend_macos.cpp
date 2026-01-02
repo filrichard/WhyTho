@@ -15,6 +15,19 @@ namespace whytho
             return std::nullopt;
 
         info.exe_path = pathbuf;
+
+        proc_bsdinfo bsd{};
+        int bytes = proc_pidinfo( pid, PROC_PIDTBSDINFO, 0, &bsd, sizeof( bsd ) );
+        if ( bytes == static_cast< int >( sizeof(bsd ) ) )
+        {
+            info.ppid = static_cast< pid_t >( bsd.pbi_ppid );
+            info.uid = static_cast< uid_t >( bsd.pbi_uid );
+        } else
+        {
+            info.ppid = 0;
+            info.uid = 0;
+        }
+
         return info;
     }
 
