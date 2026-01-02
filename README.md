@@ -1,60 +1,83 @@
-
 # whytho
 
-**whytho** is a cross-platform UNIX process investigation tool that explains **why a process is running** by analyzing OS-level evidence such as its executable, parent process, launch context, privileges, and runtime behavior.
+**whytho** is a UNIX process investigation tool that explains **why a process is running** by combining OS-level process metadata with evidence-based analysis.
 
-It is designed for **macOS and Linux**, built in **C/C++**, and focuses on *explanation and transparency* rather than surveillance or automation.
+It is designed for **macOS** (with Linux planned), written in **modern C++**, and focuses on **explanation and transparency** rather than surveillance or automated decision-making.
 
 ---
 
 ## Motivation
 
-When inspecting a system, it’s common to encounter unfamiliar or suspicious-looking processes. Tools like `ps`, `top`, and `lsof` expose raw data, but they don’t answer the higher-level question:
+When inspecting a system, it’s common to encounter unfamiliar processes. Tools like `ps`, `top`, and `lsof` expose raw data, but they don’t answer the higher-level question:
 
 > *Why is this process running?*
 
 **whytho** bridges that gap by:
-- Collecting process metadata from the operating system
-- Inferring likely launch reasons (service, user action, shell, etc.)
-- Highlighting notable or unusual traits with evidence
-- Optionally generating a human-readable explanation
+- Collecting process metadata directly from the OS
+- Building a process ancestry chain
+- Applying deterministic analysis rules
+- Presenting human-readable explanations backed by evidence
 
-whytho does **not** claim to determine intent or label processes as malicious. Instead, it presents facts, inferences, and caveats so the user can make informed decisions.
+whytho does **not** claim to infer intent or detect malware. It surfaces facts and patterns so users can make informed decisions.
 
 ---
 
 ## Features
 
-### Core
+### Core inspection
 - Inspect a process by PID
-- Display executable path, user, parent process, and start time
-- Show command line (when permitted by the OS)
-- Rule-based findings that highlight noteworthy traits
-- Clear, structured CLI output
+- Display executable path, UID, PPID
+- Build a depth-limited process ancestry chain
+- Graceful handling of permission and race conditions
 
-### Platform-aware analysis
-- macOS: launchd ancestry, executable location, permission constraints
-- Linux: `/proc`-based inspection, service/daemon inference (where possible)
-
-### Optional AI-assisted explanation
-- `--help-ai` flag generates a natural-language explanation
-- AI is used **only as an explainer**, never as the source of truth
-- All AI input is structured, minimized, and privacy-aware
+### Evidence-based analysis
+- Detects system-managed vs user-session processes
+- Identifies helper/child processes
+- Assigns informational severity levels to findings
+- Avoids speculative or destructive behavior
 
 ### Output modes
-- Human-readable CLI output
-- (Planned) JSON output for scripting and automation
+- **Human-readable CLI output**
+- **Machine-readable JSON output** (`--json`)
+  - Stable schema
+  - Missing strings represented as `null`
+  - Suitable for scripting and automation
+
+### CLI ergonomics
+- `--help`, `--version`
+- Clear error messages
+- Strict PID validation
+
+---
+
+## Building
+```sh
+make
+```
 
 ---
 
 ## Example usage
 
+### Human-readable output
 ```sh
-# Inspect a process by PID
-whytho 1234
+whytho 50373
 
-# Include additional context and explanations
-whytho 1234 --verbose
+PID: 50373
+PPID: 50329
+UID: 501
+Executable: /Applications/Brave Browser.app/Contents/Frameworks/...
+Ancestry:
+  [50373] Brave Browser Helper (GPU)
+  [50329] Brave Browser
+  [1] launchd
+Findings:
+  [INFO] Likely started under a user login session (launchd ancestry)
+  [INFO] Child/helper process of: Brave Browser
+```
+---
 
-# Request an AI-generated explanation (optional)
-whytho 1234 --help-ai
+## Requirements
+- C++
+- macOS
+- make
