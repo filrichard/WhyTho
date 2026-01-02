@@ -11,6 +11,7 @@ namespace whytho
         pid_t ppid{};
         uid_t uid{};
         std::string exe_path;
+        std::string parent_exe;
     };
 
 }

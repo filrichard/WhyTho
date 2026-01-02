@@ -7,13 +7,13 @@ namespace whytho
     {
         std::vector< Finding > out;
 
-        if ( p.ppid == 0 )
-            out.push_back( { Severity::Error, "Parent could not be identified" } );
-        else if ( p.ppid == 1 )
-            out.push_back( { Severity::Info, "Likely service-managed or launched at boot / login." } );
+        if ( p.ppid == 1 )
+            out.push_back( { Severity::Info, "Likely service-managed or launched at boot / login by PID 1" } );
+        else if ( !p.parent_exe.empty() )
+            out.push_back( { Severity::Info, "Launched by parent process: " + p.parent_exe } );
         else
-            out.push_back( { Severity::Info, "Likely started by another user or service process." } );
-        
+            out.push_back( { Severity::Error, "Parent could not be identified" } );
+
         return out;
     }
 

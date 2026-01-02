@@ -26,6 +26,8 @@ int main ( int argc, char** argv )
     std::cout << "PPID: " << info->ppid << "\n";
     std::cout << "UID: " << info->uid << "\n";
     std::cout << "Executable: " << info->exe_path << "\n";
+    if ( !info->parent_exe.empty() )
+        std::cout << "Parent executable: " << info->parent_exe << "\n";
     std::cout << analysis[ 0 ].message << "\n";
 
     return 0;

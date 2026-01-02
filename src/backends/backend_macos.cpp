@@ -28,6 +28,10 @@ namespace whytho
             info.uid = 0;
         }
 
+        char parent_buf[ PROC_PIDPATHINFO_MAXSIZE ];
+        if ( proc_pidpath( info.ppid, parent_buf, sizeof( parent_buf ) ) > 0 )
+            info.parent_exe = parent_buf;
+
         return info;
     }
 
