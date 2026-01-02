@@ -6,7 +6,7 @@
 namespace whytho
 {
 
-    enum class Severity { Info, Error };
+    enum class Severity { Info, Low, Medium, High };
 
     struct Finding
     {
