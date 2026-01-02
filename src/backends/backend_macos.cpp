@@ -5,6 +5,8 @@
 namespace whytho
 {
 
+    constexpr int MAX_ANCESTRY_DEPTH = 10;
+
     std::optional< ProcessInfo > inspect_process( pid_t pid )
     {
         ProcessInfo info{};
@@ -28,9 +30,37 @@ namespace whytho
             info.uid = 0;
         }
 
-        char parent_buf[ PROC_PIDPATHINFO_MAXSIZE ];
-        if ( proc_pidpath( info.ppid, parent_buf, sizeof( parent_buf ) ) > 0 )
-            info.parent_exe = parent_buf;
+        pid_t current = pid;
+        int depth = 0;
+
+        while ( current > 0 && depth < MAX_ANCESTRY_DEPTH )
+        {
+            char buf[ PROC_PIDPATHINFO_MAXSIZE ];
+            if ( proc_pidpath( current, buf, sizeof( buf ) ) <= 0 )
+                break;
+            
+            info.ancestry.push_back( { current, buf } );
+
+            proc_bsdinfo bsdinfo{};
+            int bytes = proc_pidinfo( current, PROC_PIDTBSDINFO, 0, &bsdinfo, sizeof( bsdinfo ) );
+            if ( bytes != static_cast< int >( sizeof( bsdinfo ) ) )
+                break;
+            
+            pid_t parent = static_cast< pid_t >( bsdinfo.pbi_ppid );
+
+            if ( parent <= 0 || parent == current )
+                break;
+            
+            if ( parent == 1 )
+            {
+                char pbuf[ PROC_PIDPATHINFO_MAXSIZE ];
+                if ( proc_pidpath( parent, pbuf, sizeof( pbuf ) ) > 0 )
+                    info.ancestry.push_back( { parent, pbuf } );
+                break;
+            }
+            current = parent;
+            ++depth;
+        }
 
         return info;
     }
