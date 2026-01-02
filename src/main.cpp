@@ -45,24 +45,30 @@ static void print_help()
 
 int main ( int argc, char** argv )
 {
-    if ( argc != 2 )
+    if ( argc < 2 )
     {
         std::cerr << "Usage: whytho <pid>\nTry: whytho --help\n";
         return 1;
     }
 
-    std::string arg = argv[ 1 ];
+    bool json = false;
+    std::string target;
 
-    if ( arg == "--help" )
+    for ( int i = 1; i < argc; ++i )
     {
-        print_help();
-        return 0;
-    }
+        std::string arg = argv[ i ];
 
-    if ( arg == "--version" )
-    {
-        std::cout << "whytho version " << WHYTHO_VERSION << "\n";
-        return 0;
+        if ( arg == "--help" ) { print_help(); return 0; }
+        if ( arg == "--version" ) { std::cout << "WhyTho Version " << WHYTHO_VERSION << "\n"; return 0; }
+        if ( arg == "--json" ) { json = true; continue; }
+
+        if ( target.empty() )
+            target = arg;
+        else
+        {
+            std::cerr << "Error: unexpected argument " << arg << "\n";
+            return 1;
+        }
     }
 
     pid_t pid{};
@@ -83,7 +89,8 @@ int main ( int argc, char** argv )
 
     std::vector< whytho::Finding > analysis = whytho::analyze( *info );
 
-    whytho::render_human( *info, analysis );
+    if ( json ) whytho::render_json( *info, analysis );
+    else        whytho::render_human( *info, analysis );
 
     return 0;
 }
