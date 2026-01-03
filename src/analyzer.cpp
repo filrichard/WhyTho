@@ -13,6 +13,11 @@ namespace whytho
         return false;
     }
 
+static bool looks_like_shell( const std::string& exe )
+{
+    return exe == "/bin/bash" || exe == "/bin/zsh" || exe == "/bin/sh" || exe == "/usr/bin/zsh";
+}
+
     std::vector< Finding > analyze( const ProcessInfo& p )
     {
         std::vector< Finding > out;
@@ -28,7 +33,10 @@ namespace whytho
         if ( p.ancestry.size() >= 2 )
         {
             const auto& parent = p.ancestry[ 1 ].exe;
-            out.push_back( { Severity::Info, "Child/helper process of: " + parent } );
+            if ( !looks_like_shell( parent ) )
+                out.push_back( { Severity::Info, "Child/helper process of: " + parent } );
+            else
+                out.push_back( { Severity::Info, "Launched from an interactive shell: " + parent } );
         }
 
         if ( p.exe_path.rfind( "/tmp/", 0 ) == 0 || p.exe_path.rfind( "/private/tmp", 0 ) == 0 )
