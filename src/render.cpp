@@ -76,8 +76,17 @@ namespace whytho
         return isatty( STDOUT_FILENO );
     }
 
+    static void print_banner()
+    {
+        if ( !use_color() ) return;
+        std::cout << "\n";
+        std::cout << "\033[1mwhytho\033[0m  •  explain why a process is running\n";
+        std::cout << "\n";
+    }
+
     void render_human( const ProcessInfo& p, const std::vector< Finding >& findings )
     {
+        print_banner();
         if ( use_color() ) std::cout << C_BOLD << C_CYAN;
         std::cout << "Process: " << basename_of( p.exe_path ) << "\n";
         if ( use_color() ) std::cout << C_RESET;
