@@ -24,8 +24,8 @@ static bool parse_pid( const char* s, pid_t& out )
     if ( errno != 0 || end == s || *end != '\0' )
         return false;
     
-    if ( val <= 0 )
-        return 0;
+    if ( val < 0 )
+        return false;
     
     out = static_cast< pid_t >( val );
     return true;
