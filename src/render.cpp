@@ -1,6 +1,13 @@
 #include "whytho/render.h"
 #include <iostream>
 #include <string>
+#include <unistd.h>
+
+static const char* C_RESET  = "\033[0m";
+static const char* C_BOLD   = "\033[1m";
+static const char* C_DIM    = "\033[2m";
+static const char* C_CYAN   = "\033[36m";
+static const char* C_GREEN  = "\033[32m";
 
 namespace whytho
 {
@@ -58,14 +65,23 @@ namespace whytho
             std::cout << "\"" << json_escape( s ) << "\"";
     }
 
-    void render_human( const ProcessInfo& p, const std::vector<Finding>& findings )
+    static std::string basename_of( const std::string& path )
     {
-        std::cout << "Process: ";
-        if ( !p.ancestry.empty() )
-            std::cout << p.ancestry.front().exe;
-        else
-            std::cout << "(unknown)";
-        std::cout << "\n\n";
+        auto pos = path.find_last_of( '/' );
+        return ( pos == std::string::npos ) ? path : path.substr( pos + 1 );
+    }
+
+    static bool use_color()
+    {
+        return isatty( STDOUT_FILENO );
+    }
+
+    void render_human( const ProcessInfo& p, const std::vector< Finding >& findings )
+    {
+        if ( use_color() ) std::cout << C_BOLD << C_CYAN;
+        std::cout << "Process: " << basename_of( p.exe_path ) << "\n";
+        if ( use_color() ) std::cout << C_RESET;
+        std::cout << "\n";
 
         std::cout << "PID: " << p.pid
                 << "    User: " << p.uid << "\n";
@@ -77,7 +93,10 @@ namespace whytho
             std::cout << "Why it's running:\n";
             for ( const auto& f : findings )
             {
-                std::cout << "  • " << f.message << "\n";
+                if ( use_color() ) std::cout << C_GREEN;
+                std::cout << "  • " << f.message;
+                if ( use_color() ) std::cout << C_RESET;
+                std::cout << "\n";
             }
             std::cout << "\n";
         }
@@ -87,7 +106,10 @@ namespace whytho
             std::cout << "Ancestry:\n";
             for ( const auto& a : p.ancestry )
             {
-                std::cout << "  [" << a.pid << "] " << a.exe << "\n";
+                if ( use_color() ) std::cout << C_DIM;
+                std::cout << "  [" << a.pid << "] " << a.exe;
+                if ( use_color() ) std::cout << C_RESET;
+                std::cout << "\n";
             }
         }
     }
