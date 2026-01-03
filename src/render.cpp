@@ -58,25 +58,36 @@ namespace whytho
             std::cout << "\"" << json_escape( s ) << "\"";
     }
 
-    void render_human( const ProcessInfo& p, const std::vector< Finding >& findings )
+    void render_human( const ProcessInfo& p, const std::vector<Finding>& findings )
     {
-        std::cout << "PID: " << p.pid << "\n";
-        std::cout << "PPID: " << p.ppid << "\n";
-        std::cout << "UID: " << p.uid << "\n";
-        std::cout << "Executable: " << p.exe_path << "\n";
+        std::cout << "Process: ";
+        if ( !p.ancestry.empty() )
+            std::cout << p.ancestry.front().exe;
+        else
+            std::cout << "(unknown)";
+        std::cout << "\n\n";
 
-        std::cout << "Ancestry:\n";
-        for ( const auto& a : p.ancestry )
-        {
-            std::cout << "  [" << a.pid << "] " << a.exe << "\n";
-        }
+        std::cout << "PID: " << p.pid
+                << "    User: " << p.uid << "\n";
+
+        std::cout << "Executable: " << p.exe_path << "\n\n";
 
         if ( !findings.empty() )
         {
-            std::cout << "Findings:\n";
+            std::cout << "Why it's running:\n";
             for ( const auto& f : findings )
             {
-                std::cout << "  [" << sev_to_str(f.severity) << "] " << f.message << "\n";
+                std::cout << "  • " << f.message << "\n";
+            }
+            std::cout << "\n";
+        }
+
+        if ( !p.ancestry.empty() )
+        {
+            std::cout << "Ancestry:\n";
+            for ( const auto& a : p.ancestry )
+            {
+                std::cout << "  [" << a.pid << "] " << a.exe << "\n";
             }
         }
     }
