@@ -60,7 +60,7 @@ make
 ## Example usage
 
 ### Human-readable output
-```sh
+```text
 ./bin/whytho 866
 
 whytho  •  explain why a process is running
