@@ -61,19 +61,24 @@ make
 
 ### Human-readable output
 ```sh
-whytho 50373
+./bin/whytho 866
 
-PID: 50373
-PPID: 50329
-UID: 501
+whytho  •  explain why a process is running
+
+Process: Brave Browser Helper (GPU)
+
+PID: 866    User: 501
 Executable: /Applications/Brave Browser.app/Contents/Frameworks/...
+
+Why it's running:
+  • Likely started under a user login session (launchd ancestry).
+  • Application child process: Brave Browser → Brave Browser Helper (GPU)
+  • Lineage: launchd → Brave Browser → Brave Browser Helper (GPU)
+
 Ancestry:
-  [50373] Brave Browser Helper (GPU)
-  [50329] Brave Browser
-  [1] launchd
-Findings:
-  [INFO] Likely started under a user login session (launchd ancestry)
-  [INFO] Child/helper process of: Brave Browser
+  [866] /Applications/Brave Browser.app/Contents/Frameworks/Brave Browser Framework.framework/Versions/143.1.85.118/Helpers/Brave Browser Helper (GPU).app/Contents/MacOS/Brave Browser Helper (GPU)
+  [654] /Applications/Brave Browser.app/Contents/MacOS/Brave Browser
+  [1] /sbin/launchd
 ```
 ---
 
