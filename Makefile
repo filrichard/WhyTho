@@ -68,7 +68,7 @@ test: $(TESTS)
 	./$(TESTS)
 
 run: $(APP)
-	./$(APP) $(ARGS)
+	./$(APP) self
 
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
