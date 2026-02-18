@@ -51,8 +51,13 @@ whytho does **not** claim to infer intent or detect malware. It surfaces facts a
 ---
 
 ## Building
+### Compiling the application
 ```sh
 make
+```
+### Cleaning up binaries
+```sh
+make clean
 ```
 
 ---
@@ -83,6 +88,6 @@ Ancestry:
 ---
 
 ## Requirements
-- C++
+- C++ compiler, like clang++, g++
 - macOS
-- make
+- MakeFile
