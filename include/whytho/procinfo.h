@@ -15,11 +15,11 @@ namespace whytho
 
     struct CodeSignInfo
     {
-        bool is_signed = false;
-        bool is_valid = false;
-        bool is_apple_signed = false;
-        bool is_hardened = false;
-        bool is_notarized = false;
+        bool is_signed          = false;
+        bool is_valid           = false;
+        bool is_apple_signed    = false;
+        bool is_hardened        = false;
+        bool is_notarized       = false;
         std::string team_id;
         std::string signing_id;
     };

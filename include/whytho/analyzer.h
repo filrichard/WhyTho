@@ -27,7 +27,7 @@ namespace whytho
 
     struct Finding
     {
-        Severity severity;
+        Severity    severity;
         std::string category;
         std::string message;
     };
