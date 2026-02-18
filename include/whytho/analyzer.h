@@ -6,11 +6,19 @@
 namespace whytho
 {
 
-    enum class Severity { Info, Low, Medium, High };
+    enum class Severity
+    {
+        Info,
+        Low,
+        Medium,
+        High
+    };
 
     enum class LaunchKind
     {
+        AppleSystem,
         SystemService,
+        UserAgent,
         UserSession,
         InteractiveShell,
         AppChild,
@@ -20,6 +28,7 @@ namespace whytho
     struct Finding
     {
         Severity severity;
+        std::string category;
         std::string message;
     };
 
