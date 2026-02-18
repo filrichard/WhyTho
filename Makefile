@@ -42,9 +42,7 @@ DEP_COMMON := $(OBJ_COMMON:.o=.d)
 
 TEST_SRC := \
   tests/test_analyzer.cpp \
-  tests/test_str.cpp \
   src/analyzer.cpp \
-  src/utils/str.cpp
 
 OBJ_TEST := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(TEST_SRC))
 DEP_TEST := $(OBJ_TEST:.o=.d)
@@ -70,7 +68,7 @@ test: $(TESTS)
 	./$(TESTS)
 
 run: $(APP)
-	./$(APP) $(ARGS)
+	./$(APP) self
 
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
