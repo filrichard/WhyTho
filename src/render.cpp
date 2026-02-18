@@ -103,7 +103,7 @@ namespace whytho
             for ( const auto& f : findings )
             {
                 if ( use_color() ) std::cout << C_GREEN;
-                std::cout << "  • " << f.message;
+                std::cout << "  " << sev_to_str( f.severity ) << "  • " << f.message;
                 if ( use_color() ) std::cout << C_RESET;
                 std::cout << "\n";
             }
